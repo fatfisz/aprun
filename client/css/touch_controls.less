@@ -1,0 +1,36 @@
+/*
+ * APRun
+ * https://github.com/fatfisz/aprun
+ *
+ * Copyright (c) 2015 FatFisz
+ * Licensed under the MIT license.
+ */
+
+@import 'mixins';
+
+
+& {
+  .module-mixins();
+
+  #mobile-controls {
+    .fullscreen();
+    background: none;
+  }
+
+  #up, #down {
+    height: 50%;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
+
+  #up {
+    // background: rgba(0, 255, 0, .15);
+    top: 0;
+  }
+
+  #down {
+    // background: rgba(255, 0, 0, .15);
+    bottom: 0;
+  }
+}
