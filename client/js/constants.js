@@ -23,6 +23,7 @@ exports.acceleration = .8e-3;
 exports.bulletOffset = 150;
 exports.bulletWidth = 4;
 exports.bulletHeight = 2;
+exports.bulletFade = 80;
 exports.bulletSpeed = 160e-3;
 
 

@@ -18,6 +18,7 @@ var {
   bulletOffset,
   bulletWidth,
   bulletHeight,
+  bulletFade,
   bulletSpeed,
   startingY,
   jumpWidth,
@@ -131,7 +132,7 @@ function clearOffscreenObjects() {
   for (i = playerBullets.length - 1; i >= 0; i -= 1) {
     [x] = playerBullets[i];
 
-    if (x - playerX < -offscreen) {
+    if (x - playerX < -bulletFade) {
       playerBullets.splice(i, 1);
     }
   }

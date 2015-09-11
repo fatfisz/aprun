@@ -15,6 +15,7 @@ var {
   playerSize,
   bulletWidth,
   bulletHeight,
+  bulletFade,
 } = require('../constants');
 var state = require('../state');
 var { context } = require('../utils');
@@ -83,8 +84,18 @@ function drawTrack(track, i) {
 }
 
 function drawPlayerBullet([x, y]) {
+  var playerX = state.player.pos[0];
+
+  if (x < playerX) {
+    context.globalAlpha = Math.max(1 - (playerX - x) / bulletFade, 0);
+  }
+
   context.fillStyle = playerColor;
   context.fillRect(x, y - bulletHeight / 2, bulletWidth, bulletHeight);
+
+  if (x < playerX) {
+    context.globalAlpha = 1;
+  }
 }
 
 module.exports = function draw() {
