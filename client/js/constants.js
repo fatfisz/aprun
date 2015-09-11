@@ -26,24 +26,22 @@ exports.bulletHeight = 2;
 exports.bulletFade = 80;
 exports.bulletSpeed = 160e-3;
 
-
 // Derivative constants
-var { platformCount, platformOffset, playerSpeed, initialForce, acceleration } = exports;
 
-exports.startingY = platformOffset * Math.floor((platformCount - 1) / 2);
+exports.startingY = exports.platformOffset * Math.floor((exports.platformCount - 1) / 2);
 
-var jumpHeight = Math.pow(initialForce, 2) / 2 / acceleration;
+var jumpHeight = Math.pow(exports.initialForce, 2) / 2 / exports.acceleration;
 
 if (process.env.NODE_ENV !== 'production' &&
-    jumpHeight <= platformOffset * 1.25) {
+    jumpHeight <= exports.platformOffset * 1.25) {
   throw new Error(`The jump is too weak: ${jumpHeight}`);
 }
 
 var jumpTime =
-  initialForce / acceleration +
-  Math.sqrt((jumpHeight - platformOffset) * 2 / acceleration);
-var fallTime = Math.sqrt(platformOffset * 2 / acceleration);
+  exports.initialForce / exports.acceleration +
+  Math.sqrt((jumpHeight - exports.platformOffset) * 2 / exports.acceleration);
+var fallTime = Math.sqrt(exports.platformOffset * 2 / exports.acceleration);
 
-exports.jumpWidth = playerSpeed * jumpTime;
+exports.jumpWidth = exports.playerSpeed * jumpTime;
 exports.jumpHeight = jumpHeight;
-exports.fallWidth = playerSpeed * fallTime;
+exports.fallWidth = exports.playerSpeed * fallTime;
