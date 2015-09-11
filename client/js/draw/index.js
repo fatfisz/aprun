@@ -16,6 +16,7 @@ var {
   bulletWidth,
   bulletHeight,
   bulletFade,
+  offscreen,
 } = require('../constants');
 var state = require('../state');
 var { context } = require('../utils');
@@ -33,7 +34,24 @@ function drawPlayer([x, y]) {
 var xCrackOffset = 13;
 var yCrackOffset = 7;
 
-function drawPlatform([x, y, width]) {
+function drawPlatform([_x, y, _width]) {
+  var playerX = state.player.pos[0];
+  var x = _x;
+  var width = _width;
+
+  if (x - playerX < -offscreen) {
+    width -= -offscreen - x + playerX;
+    x = -offscreen + playerX;
+  }
+
+  if (x + width - playerX > offscreen) {
+    width = offscreen - x + playerX;
+  }
+
+  if (width <= 0) {
+    return;
+  }
+
   var offset = (state.offset - x + y * yCrackOffset) % xCrackOffset;
 
   context.clearRect(x + 2, y - 2, width - 4, 1);

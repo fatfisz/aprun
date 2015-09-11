@@ -27,6 +27,7 @@ exports.bulletFade = 80;
 exports.bulletSpeed = 160e-3;
 
 // Derivative constants
+exports.offscreen = exports.width / 4 + 10;
 
 exports.startingY = exports.platformOffset * Math.floor((exports.platformCount - 1) / 2);
 

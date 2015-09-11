@@ -20,14 +20,13 @@ var {
   bulletHeight,
   bulletFade,
   bulletSpeed,
+  offscreen,
   startingY,
   jumpWidth,
   jumpHeight,
   fallWidth,
 } = require('./constants');
 
-
-var offscreen = width / 4 + 10;
 
 var player;
 var tracks;
