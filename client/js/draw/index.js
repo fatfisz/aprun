@@ -24,6 +24,7 @@ var clear = require('./clear');
 
 
 var playerColor = '#1ef755';
+var enemyColor = '#f71e29';
 var platformColor = '#aaa';
 
 function drawPlayer([x, y]) {
@@ -78,18 +79,35 @@ function drawSomething([x, y]) {
   context.fillRect(x, y, 5, 5);
 }
 
-function drawPlayerBullet([x, y]) {
-  var playerX = state.player.pos[0];
+var enemyParam1 = (playerSize - bulletHeight) / 2 / playerSize;
+var enemyParam2 = playerSize - enemyParam1 * (bulletWidth + playerSize / 2);
 
-  if (x < playerX) {
-    context.globalAlpha = Math.max(1 - (playerX - x) / bulletFade, 0);
+function drawEnemy([x, y, enemyX]) {
+  var height = Math.max(Math.min((enemyX - x) * enemyParam1 + enemyParam2, playerSize), 2);
+
+  context.fillStyle = enemyColor;
+  context.fillRect(enemyX - playerSize / 2, y - playerSize / 2, playerSize, height);
+}
+
+function drawPlayerBullet(bullet) {
+  var playerX = state.player.pos[0];
+  var [x, y, enemyX] = bullet;
+
+  if (enemyX === null || enemyX - x >= playerSize / 2) {
+    if (x < playerX) {
+      context.globalAlpha = Math.max(1 - (playerX - x) / bulletFade, 0);
+    }
+
+    context.fillStyle = playerColor;
+    context.fillRect(x, y - bulletHeight / 2, bulletWidth, bulletHeight);
+
+    if (x < playerX) {
+      context.globalAlpha = 1;
+    }
   }
 
-  context.fillStyle = playerColor;
-  context.fillRect(x, y - bulletHeight / 2, bulletWidth, bulletHeight);
-
-  if (x < playerX) {
-    context.globalAlpha = 1;
+  if (enemyX !== null) {
+    drawEnemy(bullet);
   }
 }
 
@@ -101,6 +119,7 @@ module.exports = function draw() {
     platforms,
     somethings,
     playerBullets,
+    enemies,
   } = state;
   var { pos } = player;
   var offsetX = width / 2 - pos[0] * 2;
@@ -119,6 +138,7 @@ module.exports = function draw() {
   somethings.forEach(drawSomething);
 
   playerBullets.forEach(drawPlayerBullet);
+  enemies.forEach(drawEnemy);
 
   drawPlayer(pos);
 };

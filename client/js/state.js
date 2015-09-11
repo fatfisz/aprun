@@ -20,6 +20,8 @@ var {
   bulletHeight,
   bulletFade,
   bulletSpeed,
+  enemyOffset,
+  startEnemyChance,
   offscreen,
   startingY,
   jumpWidth,
@@ -33,6 +35,8 @@ var trackPoints;
 var platforms;
 var somethings;
 var playerBullets;
+var enemyChance;
+var enemies;
 var offset;
 
 function overlap(x1, y1, width1, [x2, y2, width2]) {
@@ -99,6 +103,7 @@ function clearOffscreenObjects() {
   var i;
   var length;
   var x;
+  var enemyX;
 
   for (i = 0, { length } = platforms; i < length; i += 1) {
     [x] = platforms[i];
@@ -111,11 +116,24 @@ function clearOffscreenObjects() {
   }
 
   for (i = playerBullets.length - 1; i >= 0; i -= 1) {
-    [x] = playerBullets[i];
+    [x, , enemyX] = playerBullets[i];
 
     if (x - playerX < -bulletFade) {
+      if (enemyX !== null) {
+        enemies.push(playerBullets[i]);
+      }
       // Splice should be faster here than removing and sorting
       playerBullets.splice(i, 1);
+    }
+  }
+
+  for (i = 0, { length } = enemies; i < length; i += 1) {
+    [, , x] = enemies[i];
+
+    if (x - playerX > offscreen) {
+      enemies.removeBySwap(i);
+      length -= 1;
+      i -= 1;
     }
   }
 }
@@ -124,7 +142,7 @@ function clearPlayerBullets() {
   var [playerX, playerY] = player.pos;
 
   for (var i = playerBullets.length - 1; i >= 0; i -= 1) {
-    var [x, y] = playerBullets[i];
+    var [x, y, enemyX] = playerBullets[i];
 
     x -= playerX - playerSize / 2;
 
@@ -132,6 +150,9 @@ function clearPlayerBullets() {
         x <= playerSize - bulletWidth &&
         y >= playerY + bulletHeight / 2 &&
         y <= playerY + playerSize - bulletHeight / 2) {
+      if (enemyX !== null) {
+        enemies.push(playerBullets[i]);
+      }
       // Splice should be faster here than removing and sorting
       playerBullets.splice(i, 1);
       return; // only one player bullet can hit at a time
@@ -160,6 +181,16 @@ function adjustPositions() {
   adjuster(platforms);
   adjuster(somethings);
   adjuster(playerBullets);
+  playerBullets.forEach((bullet) => {
+    if (bullet[2]) {
+      bullet[2] -= x;
+    }
+  });
+  enemies.forEach((bullet) => {
+    if (bullet[2]) {
+      bullet[2] -= x;
+    }
+  });
 
   offset -= x;
 }
@@ -213,11 +244,19 @@ function generateTrack(trackPoint, index) {
 
 var timeToHit = (offscreen + bulletOffset) / (bulletSpeed - playerSpeed);
 
-function getMainTrackPlatformAt(x) {
+function getMainTrackPlatformsAt(x) {
   return platforms.filter((platform) => {
     var normalizedX = x - platform[0];
 
     return platform[3] && normalizedX >= 0 && normalizedX <= platform[2];
+  }).map((platform) => platform[1]);
+}
+
+function getPlatformsAt(x, y) {
+  return platforms.filter((platform) => {
+    var normalizedX = x - platform[0];
+
+    return platform[1] === y && normalizedX >= 0 && normalizedX <= platform[2];
   }).map((platform) => platform[1]);
 }
 
@@ -229,7 +268,8 @@ function generateBullets() {
     return;
   }
 
-  var possiblePlatforms = getMainTrackPlatformAt(playerX - timeToHit * playerSpeed);
+  var destinationX = playerX - timeToHit * playerSpeed;
+  var possiblePlatforms = getMainTrackPlatformsAt(destinationX);
 
   ({ length } = possiblePlatforms);
 
@@ -238,9 +278,30 @@ function generateBullets() {
   }
 
   var x = offscreen + playerX + bulletOffset;
-  var y = possiblePlatforms[Math.floor(Math.random() * length)] + playerSize / 2;
+  var y = possiblePlatforms[Math.floor(Math.random() * length)];
+  var enemyX = null;
 
-  playerBullets.push([x, y]);
+  if (Math.random() < enemyChance) {
+    var testEnemyX = destinationX + enemyOffset;
+
+    for (var i = 0; i < 10; i += 1) {
+      if (getPlatformsAt(testEnemyX, y).length &&
+          getPlatformsAt(testEnemyX + playerSize * 2, y).length) {
+        enemyX = testEnemyX + playerSize;
+        break;
+      }
+
+      testEnemyX += playerSize / 2;
+    }
+  }
+
+  if (enemyX === null) {
+    enemyChance += .1;
+  } else {
+    enemyChance = startEnemyChance;
+  }
+
+  playerBullets.push([x, y + playerSize / 2, enemyX]);
 }
 
 Object.defineProperties(exports, {
@@ -264,6 +325,11 @@ Object.defineProperties(exports, {
       return playerBullets;
     },
   },
+  enemies: {
+    get() {
+      return enemies;
+    },
+  },
   offset: {
     get() {
       return offset;
@@ -277,17 +343,14 @@ exports.start = () => {
     jumping: false,
     force: 0,
   };
-
   trackPoints = [0, 0, 0].map(() => [-offscreen, startingY]);
-
   platforms = [
     [-offscreen, startingY, offscreen],
   ];
-
   somethings = [];
-
   playerBullets = [];
-
+  enemyChance = startEnemyChance;
+  enemies = [];
   offset = 0;
 };
 

@@ -26,6 +26,9 @@ exports.bulletHeight = 2;
 exports.bulletFade = 80;
 exports.bulletSpeed = 160e-3;
 
+exports.enemyOffset = 150;
+exports.startEnemyChance = .25;
+
 // Derivative constants
 exports.offscreen = exports.width / 4 + 10;
 
