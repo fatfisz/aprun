@@ -49,6 +49,7 @@ function step(timestamp) {
 exports.start = () => {
   requestAnimationFrame(step);
 
+  state.start();
   stopped = false;
   firstFrame = true;
 };

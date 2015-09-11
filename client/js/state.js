@@ -29,26 +29,12 @@ var {
 
 var offscreen = width / 4 + 10;
 
-var player = {
-  pos: [0, startingY],
-  jumping: false,
-  force: 0,
-};
-
-var tracks = [0, 0, 0].map(() => [
-  [0, startingY],
-  [-offscreen, startingY],
-]);
-
-var platforms = [
-  [-offscreen, startingY, offscreen],
-];
-
-var somethings = [];
-
-var playerBullets = [];
-
-var offset = 0;
+var player;
+var tracks;
+var platforms;
+var somethings;
+var playerBullets;
+var offset;
 
 function overlap([x1, y1, width1], [x2, y2, width2]) {
   return y1 === y2 && x2 < (x1 + width1) && (x2 + width2) > x1;
@@ -264,6 +250,31 @@ function generateBullets() {
 }
 
 Object.defineProperties(exports, {
+  player: {
+    get() {
+      return player;
+    },
+  },
+  tracks: {
+    get() {
+      return tracks;
+    },
+  },
+  platforms: {
+    get() {
+      return platforms;
+    },
+  },
+  somethings: {
+    get() {
+      return somethings;
+    },
+  },
+  playerBullets: {
+    get() {
+      return playerBullets;
+    },
+  },
   offset: {
     get() {
       return offset;
@@ -271,11 +282,28 @@ Object.defineProperties(exports, {
   },
 });
 
-exports.player = player;
-exports.tracks = tracks;
-exports.platforms = platforms;
-exports.somethings = somethings;
-exports.playerBullets = playerBullets;
+exports.start = () => {
+  player = {
+    pos: [0, startingY],
+    jumping: false,
+    force: 0,
+  };
+
+  tracks = [0, 0, 0].map(() => [
+    [0, startingY],
+    [-offscreen, startingY],
+  ]);
+
+  platforms = [
+    [-offscreen, startingY, offscreen],
+  ];
+
+  somethings = [];
+
+  playerBullets = [];
+
+  offset = 0;
+};
 
 exports.isCamShaky = () => {
   var [playerX, playerY] = player.pos;
@@ -316,6 +344,7 @@ exports.updateState = () => {
   clearOffscreenObjects();
   clearPlayerBullets();
   adjustPositions();
+
   tracks.forEach(generateTrack);
   generateBullets();
 
