@@ -262,7 +262,21 @@ function generateBullets() {
   playerBullets.push([x, y]);
 }
 
-function isCamShaky() {
+Object.defineProperties(exports, {
+  offset: {
+    get() {
+      return offset;
+    },
+  },
+});
+
+exports.player = player;
+exports.tracks = tracks;
+exports.platforms = platforms;
+exports.somethings = somethings;
+exports.playerBullets = playerBullets;
+
+exports.isCamShaky = () => {
   var [playerX, playerY] = player.pos;
 
   if (playerY < -jumpHeight) {
@@ -278,26 +292,7 @@ function isCamShaky() {
   }
 
   return false;
-}
-
-Object.defineProperties(exports, {
-  offset: {
-    get() {
-      return offset;
-    },
-  },
-  shakyCam: {
-    get() {
-      return isCamShaky();
-    },
-  },
-});
-
-exports.player = player;
-exports.tracks = tracks;
-exports.platforms = platforms;
-exports.somethings = somethings;
-exports.playerBullets = playerBullets;
+};
 
 exports.shouldPlayerFall = () => {
   var [x, y] = player.pos;

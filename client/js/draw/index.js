@@ -94,13 +94,12 @@ module.exports = function draw() {
     platforms,
     somethings,
     playerBullets,
-    shakyCam,
   } = state;
   var { pos } = player;
   var offsetX = width / 2 - pos[0] * 2;
   var offsetY = height / 2 + platformOffset * 6;
 
-  if (shakyCam) {
+  if (state.isCamShaky()) {
     offsetX += Math.random() * 3 - 1.5;
     offsetY += Math.random() * 3 - 1.5;
   }
