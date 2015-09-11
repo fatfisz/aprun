@@ -31,3 +31,17 @@ assign(Object.getPrototypeOf(exports.context), {
   },
 
 });
+
+assign(Array.prototype, {
+
+  removeBySwap(i) {
+    if (i === this.length - 1) {
+      this.pop();
+    } else {
+      this[i] = this.pop();
+    }
+
+    return this;
+  },
+
+});

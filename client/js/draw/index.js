@@ -78,29 +78,6 @@ function drawSomething([x, y]) {
   context.fillRect(x, y, 5, 5);
 }
 
-var colors = [
-  'lime',
-  'red',
-  'cyan',
-  'navy',
-  'yellow',
-];
-
-function drawTrack(track, i) {
-  context.save();
-
-  context.beginPath();
-  context.moveTo(track[0][0], track[0][1] + playerSize / 2);
-  track.forEach((point) => {
-    context.lineTo(point[0], point[1] + playerSize / 2);
-  });
-  context.strokeStyle = colors[i];
-  context.strokeWidth = 2;
-  context.stroke();
-
-  context.restore();
-}
-
 function drawPlayerBullet([x, y]) {
   var playerX = state.player.pos[0];
 
@@ -121,7 +98,6 @@ var shakeSize = 5;
 module.exports = function draw() {
   var {
     player,
-    tracks,
     platforms,
     somethings,
     playerBullets,
@@ -141,7 +117,6 @@ module.exports = function draw() {
 
   platforms.sort((a, b) => b[1] - a[1]).forEach(drawPlatform);
   somethings.forEach(drawSomething);
-  tracks.forEach(drawTrack);
 
   playerBullets.forEach(drawPlayerBullet);
 

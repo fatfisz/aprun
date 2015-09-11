@@ -29,18 +29,19 @@ var {
 
 
 var player;
-var tracks;
+var trackPoints;
 var platforms;
 var somethings;
 var playerBullets;
 var offset;
 
-function overlap([x1, y1, width1], [x2, y2, width2]) {
+function overlap(x1, y1, width1, [x2, y2, width2]) {
   return y1 === y2 && x2 < (x1 + width1) && (x2 + width2) > x1;
 }
 
 function addPlatform(x, y, width, isMainTrack) {
-  var paddedPlatform = [x - playerSize * 1.5, y, width + playerSize * 3];
+  var paddedX = x - playerSize * 1.5;
+  var paddedWidth = width + playerSize * 3;
   var { length } = platforms;
   var x1 = x;
   var x2 = x + width;
@@ -51,7 +52,7 @@ function addPlatform(x, y, width, isMainTrack) {
   for (i = 0; i < length; i += 1) {
     tx = platforms[i][0];
 
-    if (overlap(paddedPlatform, platforms[i])) {
+    if (overlap(paddedX, y, paddedWidth, platforms[i])) {
       x1 = Math.min(x1, tx);
       x2 = Math.max(x2, tx + platforms[i][2]);
 
@@ -72,10 +73,10 @@ function addPlatform(x, y, width, isMainTrack) {
   }
 
   // Merge overlapping platforms starting from the back
-  for (var j = length - 1; j > i; j -= 1) {
+  for (var j = i + 1; j < length; j += 1) {
     tx = platforms[j][0];
 
-    if (overlap(paddedPlatform, platforms[j])) {
+    if (overlap(paddedX, y, paddedWidth, platforms[j])) {
       x1 = Math.min(x1, tx);
       x2 = Math.max(x2, tx + platforms[j][2]);
 
@@ -86,7 +87,9 @@ function addPlatform(x, y, width, isMainTrack) {
         platforms[i][3] = true;
       }
 
-      platforms.splice(j, 1);
+      platforms.removeBySwap(j);
+      length -= 1;
+      j -= 1;
     }
   }
 }
@@ -94,23 +97,16 @@ function addPlatform(x, y, width, isMainTrack) {
 function clearOffscreenObjects() {
   var playerX = player.pos[0];
   var i;
+  var length;
   var x;
 
-  tracks.forEach((track) => {
-    for (i = track.length - 1; i >= 0; i -= 1) {
-      [x] = track[i];
-
-      if (x - playerX > 2 * offscreen) {
-        track.splice(i, 1);
-      }
-    }
-  });
-
-  for (i = platforms.length - 1; i >= 0; i -= 1) {
+  for (i = 0, { length } = platforms; i < length; i += 1) {
     [x] = platforms[i];
 
     if (x - playerX > offscreen) {
-      platforms.splice(i, 1);
+      platforms.removeBySwap(i);
+      length -= 1;
+      i -= 1;
     }
   }
 
@@ -118,6 +114,7 @@ function clearOffscreenObjects() {
     [x] = playerBullets[i];
 
     if (x - playerX < -bulletFade) {
+      // Splice should be faster here than removing and sorting
       playerBullets.splice(i, 1);
     }
   }
@@ -135,6 +132,7 @@ function clearPlayerBullets() {
         x <= playerSize - bulletWidth &&
         y >= playerY + bulletHeight / 2 &&
         y <= playerY + playerSize - bulletHeight / 2) {
+      // Splice should be faster here than removing and sorting
       playerBullets.splice(i, 1);
       return; // only one player bullet can hit at a time
     }
@@ -158,7 +156,7 @@ function adjustPositions() {
 
   player.pos[0] -= x;
 
-  tracks.forEach(adjuster);
+  adjuster(trackPoints);
   adjuster(platforms);
   adjuster(somethings);
   adjuster(playerBullets);
@@ -166,14 +164,12 @@ function adjustPositions() {
   offset -= x;
 }
 
-function generateTrack(track, index) {
+function generateTrack(trackPoint, index) {
   var isMainTrack = index === 0;
   var playerX = player.pos[0];
-  var { length } = track;
-  var lastPoint = track[length - 1];
 
-  while (lastPoint[0] - playerX > -offscreen * 4) {
-    var [prevX, prevY] = lastPoint;
+  while (trackPoint[0] - playerX > -offscreen * 4) {
+    var [prevX, prevY] = trackPoint;
     var nextX = prevX;
     var nextY;
     var flightWidth = 0;
@@ -196,7 +192,6 @@ function generateTrack(track, index) {
     if (nextY !== prevY) {
       flightWidth = Math.round(nextY > prevY ? jumpWidth : fallWidth);
       nextX -= flightWidth;
-      track.push([nextX, nextY]);
     }
 
     var elevationBasedMod = 1 - nextY / platformOffset / (platformCount - 1) / 2;
@@ -204,8 +199,8 @@ function generateTrack(track, index) {
       (2 + Math.pow(Math.random(), 5)) * platformWidthMod * elevationBasedMod
     );
 
-    lastPoint = [nextX - platformWidth, nextY];
-    length = track.push(lastPoint);
+    trackPoint[0] = nextX - platformWidth;
+    trackPoint[1] = nextY;
 
     addPlatform(
       nextX - platformWidth,
@@ -254,11 +249,6 @@ Object.defineProperties(exports, {
       return player;
     },
   },
-  tracks: {
-    get() {
-      return tracks;
-    },
-  },
   platforms: {
     get() {
       return platforms;
@@ -288,10 +278,7 @@ exports.start = () => {
     force: 0,
   };
 
-  tracks = [0, 0, 0].map(() => [
-    [0, startingY],
-    [-offscreen, startingY],
-  ]);
+  trackPoints = [0, 0, 0].map(() => [-offscreen, startingY]);
 
   platforms = [
     [-offscreen, startingY, offscreen],
@@ -324,10 +311,9 @@ exports.isCamShaky = () => {
 
 exports.shouldPlayerFall = () => {
   var [x, y] = player.pos;
-  var playerBottom = [x - playerSize / 2, y, playerSize];
 
   for (var i = platforms.length - 1; i >= 0; i -= 1) {
-    if (overlap(playerBottom, platforms[i])) {
+    if (overlap(x - playerSize / 2, y, playerSize, platforms[i])) {
       return false;
     }
   }
@@ -344,7 +330,7 @@ exports.updateState = () => {
   clearPlayerBullets();
   adjustPositions();
 
-  tracks.forEach(generateTrack);
+  trackPoints.forEach(generateTrack);
   generateBullets();
 
   addPlatform(-width, -platformOffset, width);
