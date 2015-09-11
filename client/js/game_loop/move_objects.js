@@ -13,6 +13,7 @@ var {
   playerSpeed,
   initialForce,
   acceleration,
+  bulletSpeed,
 } = require('../constants');
 var controls = require('../controls');
 var state = require('../state');
@@ -70,7 +71,6 @@ function movePlayer(delta) {
       }
     }
   } else if (canDoubleJump && direction === 'up') {
-    console.log('double');
     player.jumping = true;
     player.force = initialForce;
     player.targetY = NaN;
@@ -82,6 +82,15 @@ function movePlayer(delta) {
   }
 }
 
+function movePlayerBullets(delta) {
+  var { playerBullets } = state;
+
+  playerBullets.forEach((bullet) => {
+    bullet[0] -= bulletSpeed * delta;
+  });
+}
+
 module.exports = function moveObjects(delta) {
   movePlayer(delta);
+  movePlayerBullets(delta);
 };

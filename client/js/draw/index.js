@@ -8,28 +8,40 @@
 
 'use strict';
 
-var { width, height, platformOffset, playerSize } = require('../constants');
+var {
+  width,
+  height,
+  platformOffset,
+  playerSize,
+  bulletWidth,
+  bulletHeight,
+} = require('../constants');
 var state = require('../state');
 var { context } = require('../utils');
 var clear = require('./clear');
 
 
+var playerColor = '#1ef755';
+var platformColor = '#aaa';
+
 function drawPlayer([x, y]) {
-  context.fillStyle = 'blue';
-  context.fillRect(x - 5, y, playerSize, playerSize);
+  context.fillStyle = playerColor;
+  context.fillRect(x - playerSize / 2, y, playerSize, playerSize);
 }
 
 var xCrackOffset = 14;
 var yCrackOffset = 3;
 
 function drawPlatform([x, y, width]) {
-  context.clearRect(x, y - 2, width, 1);
-  context.clearRect(x - 1, y - height, width + 2, height - 1);
+  var offset = (state.offset - x + y * y * yCrackOffset) % xCrackOffset;
 
-  context.fillStyle = 'white';
+  context.clearRect(x + 2, y - 2, width - 4, 1);
+  context.clearRect(x + 1, y - height, width - 2, height - 1);
 
-  for (var crackX = x + (state.offset - x + y * y * yCrackOffset) % xCrackOffset;
-       crackX <= x + width;
+  context.fillStyle = platformColor;
+
+  for (var crackX = x + 2 + offset;
+       crackX <= x + width - 4;
        crackX += xCrackOffset) {
     if (crackX < x + width) {
       context.fillRect(crackX, y - 2, 1, 1);
@@ -37,8 +49,8 @@ function drawPlatform([x, y, width]) {
     context.fillRect(crackX - 1, y - 3, 1, 1);
   }
 
-  context.roundedRect(x - 1.5, y - height, x + width + 1.5, y - .5, 2.75);
-  context.strokeStyle = 'white';
+  context.roundedRect(x + .5, y - height, x + width - .5, y - .5, 2.75);
+  context.strokeStyle = platformColor;
   context.stroke();
 }
 
@@ -70,25 +82,38 @@ function drawTrack(track, i) {
   context.restore();
 }
 
+function drawPlayerBullet([x, y]) {
+  context.fillStyle = playerColor;
+  context.fillRect(x, y - bulletHeight / 2, bulletWidth, bulletHeight);
+}
+
 module.exports = function draw() {
-  var { player, tracks, platforms, somethings } = state;
+  var {
+    player,
+    tracks,
+    platforms,
+    somethings,
+    playerBullets,
+    shakyCam,
+  } = state;
   var { pos } = player;
+  var offsetX = width / 2 - pos[0] * 2;
+  var offsetY = height / 2 + platformOffset * 6;
+
+  if (shakyCam) {
+    offsetX += Math.random() * 3 - 1.5;
+    offsetY += Math.random() * 3 - 1.5;
+  }
 
   clear();
 
-  context.setTransform(2, 0, 0, -2, width / 2 - pos[0] * 2, height / 2 + platformOffset * 3);
+  context.setTransform(2, 0, 0, -2, offsetX, offsetY);
 
-  platforms
-    .filter((platform) => platform[1] === platformOffset * 2)
-    .forEach(drawPlatform);
-  platforms
-    .filter((platform) => platform[1] === platformOffset)
-    .forEach(drawPlatform);
-  platforms
-    .filter((platform) => platform[1] === 0)
-    .forEach(drawPlatform);
+  platforms.sort((a, b) => b[1] - a[1]).forEach(drawPlatform);
   somethings.forEach(drawSomething);
   tracks.forEach(drawTrack);
+
+  playerBullets.forEach(drawPlayerBullet);
 
   drawPlayer(pos);
 };
