@@ -20,7 +20,7 @@ exports.playerSpeed = 100e-3;
 exports.initialForce = 200e-3;
 exports.acceleration = .8e-3;
 
-exports.bulletOffset = 150;
+exports.bulletOffset = 125;
 exports.bulletWidth = 4;
 exports.bulletHeight = 2;
 exports.bulletFade = 80;
