@@ -30,11 +30,11 @@ function drawPlayer([x, y]) {
   context.fillRect(x - playerSize / 2, y, playerSize, playerSize);
 }
 
-var xCrackOffset = 14;
-var yCrackOffset = 3;
+var xCrackOffset = 13;
+var yCrackOffset = 7;
 
 function drawPlatform([x, y, width]) {
-  var offset = (state.offset - x + y * y * yCrackOffset) % xCrackOffset;
+  var offset = (state.offset - x + y * yCrackOffset) % xCrackOffset;
 
   context.clearRect(x + 2, y - 2, width - 4, 1);
   context.clearRect(x + 1, y - height, width - 2, height - 1);
@@ -98,6 +98,8 @@ function drawPlayerBullet([x, y]) {
   }
 }
 
+var shakeSize = 5;
+
 module.exports = function draw() {
   var {
     player,
@@ -111,8 +113,8 @@ module.exports = function draw() {
   var offsetY = height / 2 + platformOffset * 6;
 
   if (state.isCamShaky()) {
-    offsetX += Math.random() * 3 - 1.5;
-    offsetY += Math.random() * 3 - 1.5;
+    offsetX += shakeSize * (Math.random() * 2 - 1);
+    offsetY += shakeSize * (Math.random() * 2 - 1);
   }
 
   clear();
