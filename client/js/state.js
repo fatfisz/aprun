@@ -232,7 +232,7 @@ function generateTrack(track, index) {
 
 var timeToHit = (offscreen + bulletOffset) / (bulletSpeed - playerSpeed);
 
-function getMainTrackPlatformsAt(x) {
+function getMainTrackPlatformAt(x) {
   return platforms.filter((platform) => {
     var normalizedX = x - platform[0];
 
@@ -248,7 +248,7 @@ function generateBullets() {
     return;
   }
 
-  var possiblePlatforms = getMainTrackPlatformsAt(playerX - timeToHit * playerSpeed);
+  var possiblePlatforms = getMainTrackPlatformAt(playerX - timeToHit * playerSpeed);
 
   ({ length } = possiblePlatforms);
 
