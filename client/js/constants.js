@@ -32,11 +32,12 @@ exports.startEnemyChance = .25;
 exports.enemyBulletOffset = 120;
 exports.enemyBulletShift = 90;
 
-exports.stunTime = 2500;
+exports.stunTime = 3000;
 exports.gaugeRefillSpeed = 5e-5;
 exports.bulletMissGaugeValue = .25;
 exports.bulletHitGaugeValue = .35;
 exports.teleportGaugeValue = .75;
+exports.timeToEnd = 1500;
 
 // Derivative constants
 exports.offscreen = exports.width / 4 + exports.playerSize;

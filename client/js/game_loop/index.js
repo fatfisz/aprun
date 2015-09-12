@@ -21,9 +21,8 @@ function step() {
     return;
   }
 
-  if (state.shouldGameEnd()) {
+  if (state.didGameEnd()) {
     exports.stop();
-    exports.start();
     return;
   }
 

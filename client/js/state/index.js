@@ -18,6 +18,7 @@ var {
   bulletMissGaugeValue,
   bulletHitGaugeValue,
   teleportGaugeValue,
+  timeToEnd,
   offscreen,
   startingY,
 } = require('../constants');
@@ -31,6 +32,7 @@ var player;
 var platforms;
 var bullets;
 var offset;
+var timeLeft;
 
 function clearOffscreenObjects() {
   var playerX = player.pos[0];
@@ -165,6 +167,9 @@ Object.defineProperties(exports, {
   offset: {
     get: () => offset,
   },
+  timeLeft: {
+    get: () => timeLeft,
+  },
 });
 
 exports.gauge = gauge;
@@ -180,6 +185,7 @@ exports.start = () => {
   ];
   bullets = [];
   offset = 0;
+  timeLeft = null;
 
   bulletGenerator.init();
   gauge.init();
@@ -198,12 +204,21 @@ exports.shouldPlayerFall = () => {
   return true;
 };
 
-exports.shouldGameEnd = () => {
-  return player.pos[1] < -jumpHeight * 10;
+exports.didGameEnd = () => {
+  return timeLeft === 0;
 };
 
 exports.updateState = (delta) => {
+  if (timeLeft !== null) {
+    timeLeft = Math.max(timeLeft - delta, 0);
+  }
+
   gauge.step(delta);
+
+  if (timeLeft === null && gauge.value === 0) {
+    timeLeft = timeToEnd;
+  }
+
   clearOffscreenObjects();
   checkBullets();
   adjustPositions();
