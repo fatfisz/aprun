@@ -89,11 +89,17 @@ function drawEnemy([x, y, enemyX]) {
   context.fillRect(enemyX - playerSize / 2, y - playerSize / 2, playerSize, height);
 }
 
-function drawPlayerBullet(bullet) {
-  var playerX = state.player.pos[0];
-  var [x, y, enemyX] = bullet;
+function drawEnemyBullet([x, y]) {
+  context.fillStyle = enemyColor;
+  context.fillRect(x, y - bulletHeight / 2, bulletWidth, bulletHeight);
+}
 
-  if (enemyX === null || enemyX - x >= playerSize / 2) {
+function drawBullet(bullet) {
+  var playerX = state.player.pos[0];
+  var [x, y, enemyX, enemyBullets, hit] = bullet;
+
+  if (!hit &&
+      (enemyX === null || enemyX - x >= playerSize / 2)) {
     if (x < playerX) {
       context.globalAlpha = Math.max(1 - (playerX - x) / bulletFade, 0);
     }
@@ -108,6 +114,11 @@ function drawPlayerBullet(bullet) {
 
   if (enemyX !== null) {
     drawEnemy(bullet);
+    enemyBullets.forEach((enemyBullet) => {
+      if (enemyBullet[0] < enemyX - playerSize / 2) {
+        drawEnemyBullet(enemyBullet);
+      }
+    });
   }
 }
 
@@ -118,8 +129,7 @@ module.exports = function draw() {
     player,
     platforms,
     somethings,
-    playerBullets,
-    enemies,
+    bullets,
   } = state;
   var { pos } = player;
   var offsetX = width / 2 - pos[0] * 2;
@@ -137,8 +147,7 @@ module.exports = function draw() {
   platforms.sort((a, b) => b[1] - a[1]).forEach(drawPlatform);
   somethings.forEach(drawSomething);
 
-  playerBullets.forEach(drawPlayerBullet);
-  enemies.forEach(drawEnemy);
+  bullets.forEach(drawBullet);
 
   drawPlayer(pos);
 };

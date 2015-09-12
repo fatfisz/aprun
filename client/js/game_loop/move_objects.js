@@ -82,15 +82,23 @@ function movePlayer(delta) {
   }
 }
 
-function movePlayerBullets(delta) {
-  var { playerBullets } = state;
+function moveBullets(delta) {
+  var { bullets } = state;
 
-  playerBullets.forEach((bullet) => {
+  bullets.forEach((bullet) => {
     bullet[0] -= bulletSpeed * delta;
+
+    if (!bullet[2]) {
+      return;
+    }
+
+    bullet[3].forEach((enemyBullet) => {
+      enemyBullet[0] += bulletSpeed * delta;
+    });
   });
 }
 
 module.exports = function moveObjects(delta) {
   movePlayer(delta);
-  movePlayerBullets(delta);
+  moveBullets(delta);
 };

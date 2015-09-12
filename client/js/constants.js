@@ -8,8 +8,8 @@
 
 'use strict';
 
-exports.width = 640;
-exports.height = 270;
+exports.width = 960;
+exports.height = 324;
 
 exports.platformCount = 5;
 exports.platformOffset = 18;
@@ -28,9 +28,11 @@ exports.bulletSpeed = 160e-3;
 
 exports.enemyOffset = 150;
 exports.startEnemyChance = .25;
+exports.enemyBulletOffset = 120;
+exports.enemyBulletShift = 90;
 
 // Derivative constants
-exports.offscreen = exports.width / 4 + 10;
+exports.offscreen = exports.width / 4 + exports.playerSize;
 
 exports.startingY = exports.platformOffset * Math.floor((exports.platformCount - 1) / 2);
 
