@@ -8,8 +8,9 @@
 
 'use strict';
 
-exports.width = 960;
-exports.height = 324;
+exports.width = 64 * 15;
+exports.height = 27 * 15;
+exports.statusHeight = 27 * 3;
 
 exports.platformCount = 5;
 exports.platformOffset = 18;
@@ -30,6 +31,12 @@ exports.enemyOffset = 150;
 exports.startEnemyChance = .25;
 exports.enemyBulletOffset = 120;
 exports.enemyBulletShift = 90;
+
+exports.stunTime = 2500;
+exports.gaugeRefillSpeed = 5e-5;
+exports.bulletMissGaugeValue = .25;
+exports.bulletHitGaugeValue = .35;
+exports.teleportGaugeValue = .75;
 
 // Derivative constants
 exports.offscreen = exports.width / 4 + exports.playerSize;

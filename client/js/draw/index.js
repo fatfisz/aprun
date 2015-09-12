@@ -11,6 +11,7 @@
 var {
   width,
   height,
+  statusHeight,
   playerSize,
   bulletWidth,
   bulletHeight,
@@ -20,6 +21,7 @@ var {
 var state = require('../state');
 var { context } = require('../utils');
 var clear = require('./clear');
+var drawStatus = require('./status');
 
 
 var playerColor = '#1ef755';
@@ -117,21 +119,23 @@ function drawBullet(bullet) {
   }
 }
 
-var shakeSize = 5;
+var shakeSize = 8;
 
 module.exports = function draw() {
   var {
     player,
     platforms,
     bullets,
+    gauge,
   } = state;
   var { pos } = player;
   var offsetX = width / 2 - pos[0] * 2;
-  var offsetY = height / 2 + pos[1] * 2 + playerSize;
+  var offsetY = (height + statusHeight) / 2 + pos[1] * 2 + playerSize;
+  var { value: gaugeValue } = gauge;
 
-  if (state.isCamShaky()) {
-    offsetX += shakeSize * (Math.random() * 2 - 1);
-    offsetY += shakeSize * (Math.random() * 2 - 1);
+  if (gaugeValue < 1) {
+    offsetX += shakeSize * (1 - gaugeValue) * (Math.random() * 2 - 1);
+    offsetY += shakeSize * (1 - gaugeValue) * (Math.random() * 2 - 1);
   }
 
   clear();
@@ -142,4 +146,6 @@ module.exports = function draw() {
   bullets.forEach(drawBullet);
 
   drawPlayer(pos);
+
+  drawStatus();
 };

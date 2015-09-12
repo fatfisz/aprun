@@ -9,15 +9,21 @@
 'use strict';
 
 var {
+  platformCount,
+  platformOffset,
   playerSize,
   bulletWidth,
   bulletHeight,
   bulletFade,
+  bulletMissGaugeValue,
+  bulletHitGaugeValue,
+  teleportGaugeValue,
   offscreen,
   startingY,
   jumpHeight,
 } = require('../constants');
 var bulletGenerator = require('./bullet_generator');
+var gauge = require('./gauge');
 var overlap = require('./overlap');
 var platformGenerator = require('./platform_generator');
 
@@ -55,11 +61,41 @@ function clearOffscreenObjects() {
   }
 }
 
-function clearBullets() {
+function checkEnemyBullets(bullets) {
   var [playerX, playerY] = player.pos;
 
   for (var i = bullets.length - 1; i >= 0; i -= 1) {
-    var [x, y] = bullets[i];
+    var [x, y, hit] = bullets[i];
+
+    if (hit) {
+      continue;
+    }
+
+    x -= playerX - playerSize / 2;
+
+    if (x > -bulletWidth &&
+        x < playerSize &&
+        y > playerY - bulletHeight &&
+        y < playerY + playerSize + bulletHeight) {
+      bullets[i][2] = true;
+      gauge.hit(bulletHitGaugeValue);
+    }
+  }
+}
+
+function checkBullets() {
+  var [playerX, playerY] = player.pos;
+
+  for (var i = bullets.length - 1; i >= 0; i -= 1) {
+    var [x, y, , enemyBullets, absorbed, missedPlayer] = bullets[i];
+
+    if (enemyBullets) {
+      checkEnemyBullets(enemyBullets);
+    }
+
+    if (absorbed) {
+      continue;
+    }
 
     x -= playerX - playerSize / 2;
 
@@ -67,8 +103,13 @@ function clearBullets() {
         x <= playerSize - bulletWidth &&
         y >= playerY + bulletHeight / 2 &&
         y <= playerY + playerSize - bulletHeight / 2) {
-      bullets[i][4] = true;
-      break; // only one player bullet can hit at a time
+      bullets[i][4] = true; // absorbed
+      continue;
+    }
+
+    if (x < 0 && !missedPlayer) {
+      bullets[i][5] = true; // missedPlayer
+      gauge.hit(bulletMissGaugeValue);
     }
   }
 }
@@ -103,6 +144,15 @@ function adjustPositions() {
   offset -= x;
 }
 
+function checkTeleport() {
+  if (player.pos[1] < -4 * platformOffset) {
+    player.pos[1] = (platformCount + 4) * platformOffset;
+    player.force = 0;
+    player.targetY = NaN;
+    gauge.hit(teleportGaugeValue);
+  }
+}
+
 Object.defineProperties(exports, {
   player: {
     get() {
@@ -126,6 +176,8 @@ Object.defineProperties(exports, {
   },
 });
 
+exports.gauge = gauge;
+
 exports.start = () => {
   player = {
     pos: [0, startingY],
@@ -139,29 +191,8 @@ exports.start = () => {
   offset = 0;
 
   bulletGenerator.init();
+  gauge.init();
   platformGenerator.init();
-};
-
-exports.isCamShaky = () => {
-  var [playerX, playerY] = player.pos;
-
-  if (playerY < -jumpHeight) {
-    return true;
-  }
-
-  for (var i = bullets.length - 1; i >= 0; i -= 1) {
-    if (bullets[i][4]) {
-      continue;
-    }
-
-    var x = bullets[i][0] - playerX + playerSize / 2;
-
-    if (x < 0 && x > -playerSize * 3) {
-      return true;
-    }
-  }
-
-  return false;
 };
 
 exports.shouldPlayerFall = () => {
@@ -180,11 +211,13 @@ exports.shouldGameEnd = () => {
   return player.pos[1] < -jumpHeight * 10;
 };
 
-exports.updateState = () => {
+exports.updateState = (delta) => {
+  gauge.step(delta);
   clearOffscreenObjects();
-  clearBullets();
+  checkBullets();
   adjustPositions();
 
   platformGenerator.generate();
   bulletGenerator.generate();
+  checkTeleport();
 };

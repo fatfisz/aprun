@@ -69,6 +69,7 @@ function getEnemyBullets(enemyX, y, destinationX) {
     result.push([
       getEnemyBulletAtIndex(destinationX, i),
       y + playerSize / 2,
+      false, // hit
     ]);
   }
 
@@ -127,5 +128,6 @@ exports.generate = () => {
     enemyChance = startEnemyChance;
   }
 
-  bullets.push([x, y + playerSize / 2, enemyX, enemyBullets, false]);
+  // x, y, enemyX, enemyBullets, absorbed, missedPlayer
+  bullets.push([x, y + playerSize / 2, enemyX, enemyBullets, false, false]);
 };

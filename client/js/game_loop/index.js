@@ -29,7 +29,7 @@ function step() {
 
   requestAnimationFrame(step);
 
-  state.updateState();
+  state.updateState(delta);
   moveObjects(delta);
 
   draw();
