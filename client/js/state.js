@@ -9,7 +9,6 @@
 'use strict';
 
 var {
-  width,
   platformCount,
   platformOffset,
   platformWidthMod,
@@ -410,6 +409,4 @@ exports.updateState = () => {
 
   trackPoints.forEach(generateTrack);
   generateBullets();
-
-  addPlatform(-width, -platformOffset, width);
 };
