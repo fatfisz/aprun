@@ -286,6 +286,7 @@ function generateBullets() {
 
     for (var i = 0; i < 10; i += 1) {
       if (getPlatformsAt(testEnemyX, y).length &&
+          getPlatformsAt(testEnemyX + playerSize, y).length &&
           getPlatformsAt(testEnemyX + playerSize * 2, y).length) {
         enemyX = testEnemyX + playerSize;
         break;
