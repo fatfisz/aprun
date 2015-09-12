@@ -14,11 +14,9 @@ var moveObjects = require('./move_objects');
 
 
 var stopped = true;
-var firstFrame;
-var lastTimestamp;
-var delta;
+var delta = 1000 / 60;
 
-function step(timestamp) {
+function step() {
   if (stopped) {
     return;
   }
@@ -31,15 +29,6 @@ function step(timestamp) {
 
   requestAnimationFrame(step);
 
-  if (firstFrame) {
-    lastTimestamp = timestamp;
-    firstFrame = false;
-  }
-
-  // Limit delta so that strange jumps won't occur
-  delta = Math.min(timestamp - lastTimestamp, 1000 / 60);
-  lastTimestamp = timestamp;
-
   state.updateState();
   moveObjects(delta);
 
@@ -51,7 +40,6 @@ exports.start = () => {
 
   state.start();
   stopped = false;
-  firstFrame = true;
 };
 
 exports.stop = () => {
