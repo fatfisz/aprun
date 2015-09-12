@@ -11,7 +11,6 @@
 var {
   width,
   height,
-  platformOffset,
   playerSize,
   bulletWidth,
   bulletHeight,
@@ -34,6 +33,7 @@ function drawPlayer([x, y]) {
 
 var xCrackOffset = 13;
 var yCrackOffset = 7;
+var platformHeight = height / 4;
 
 function drawPlatform([_x, y, _width]) {
   var playerX = state.player.pos[0];
@@ -56,7 +56,7 @@ function drawPlatform([_x, y, _width]) {
   var offset = (state.offset - x + y * yCrackOffset) % xCrackOffset;
 
   context.clearRect(x + 2, y - 2, width - 4, 1);
-  context.clearRect(x + 1, y - height, width - 2, height - 1);
+  context.clearRect(x + 1, y - platformHeight, width - 2, platformHeight - 1);
 
   context.fillStyle = platformColor;
 
@@ -69,7 +69,7 @@ function drawPlatform([_x, y, _width]) {
     context.fillRect(crackX - 1, y - 3, 1, 1);
   }
 
-  context.roundedRect(x + .5, y - height, x + width - .5, y - .5, 2.75);
+  context.roundedRect(x + .5, y - platformHeight, x + width - .5, y - .5, 2.75);
   context.strokeStyle = platformColor;
   context.stroke();
 }
