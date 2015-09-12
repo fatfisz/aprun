@@ -186,10 +186,11 @@ function adjustPositions() {
       bullet[2] -= x;
     }
   });
-  enemies.forEach((bullet) => {
-    if (bullet[2]) {
-      bullet[2] -= x;
+  enemies.forEach((enemy) => {
+    if (process.env.NODE_ENV !== 'production' && enemy[2] === null) {
+      throw new Error('Invalid enemy data');
     }
+    enemy[2] -= x;
   });
 
   offset -= x;
@@ -199,7 +200,7 @@ function generateTrack(trackPoint, index) {
   var isMainTrack = index === 0;
   var playerX = player.pos[0];
 
-  while (trackPoint[0] - playerX > -offscreen * 4) {
+  while (trackPoint[0] - playerX > -offscreen * 3) {
     var [prevX, prevY] = trackPoint;
     var nextX = prevX;
     var nextY;
