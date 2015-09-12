@@ -123,7 +123,7 @@ module.exports = function draw() {
   } = state;
   var { pos } = player;
   var offsetX = width / 2 - pos[0] * 2;
-  var offsetY = height / 2 + platformOffset * 6;
+  var offsetY = height / 2 + pos[1] * 2 + playerSize;
 
   if (state.isCamShaky()) {
     offsetX += shakeSize * (Math.random() * 2 - 1);
