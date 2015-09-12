@@ -28,7 +28,7 @@ exports.init = () => {
 };
 
 exports.hit = (_value) => {
-  value -= _value;
+  value = Math.max(value - _value, 0);
   stunLeft = stunTime;
 };
 

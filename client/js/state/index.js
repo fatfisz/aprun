@@ -20,7 +20,6 @@ var {
   teleportGaugeValue,
   offscreen,
   startingY,
-  jumpHeight,
 } = require('../constants');
 var bulletGenerator = require('./bullet_generator');
 var gauge = require('./gauge');
@@ -155,24 +154,16 @@ function checkTeleport() {
 
 Object.defineProperties(exports, {
   player: {
-    get() {
-      return player;
-    },
+    get: () => player,
   },
   platforms: {
-    get() {
-      return platforms;
-    },
+    get: () => platforms,
   },
   bullets: {
-    get() {
-      return bullets;
-    },
+    get: () => bullets,
   },
   offset: {
-    get() {
-      return offset;
-    },
+    get: () => offset,
   },
 });
 

@@ -56,5 +56,4 @@ var jumpTime =
 var fallTime = Math.sqrt(exports.platformOffset * 2 / exports.acceleration);
 
 exports.jumpWidth = exports.playerSpeed * jumpTime;
-exports.jumpHeight = jumpHeight;
 exports.fallWidth = exports.playerSpeed * fallTime;
