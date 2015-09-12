@@ -28,7 +28,7 @@ var {
   jumpWidth,
   jumpHeight,
   fallWidth,
-} = require('./constants');
+} = require('../constants');
 
 
 var player;
