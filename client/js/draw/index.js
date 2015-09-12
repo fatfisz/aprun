@@ -74,11 +74,6 @@ function drawPlatform([_x, y, _width]) {
   context.stroke();
 }
 
-function drawSomething([x, y]) {
-  context.fillStyle = 'yellow';
-  context.fillRect(x, y, 5, 5);
-}
-
 var enemyParam1 = (playerSize - bulletHeight) / 2 / playerSize;
 var enemyParam2 = playerSize - enemyParam1 * (bulletWidth + playerSize / 2);
 
@@ -128,7 +123,6 @@ module.exports = function draw() {
   var {
     player,
     platforms,
-    somethings,
     bullets,
   } = state;
   var { pos } = player;
@@ -145,8 +139,6 @@ module.exports = function draw() {
   context.setTransform(2, 0, 0, -2, offsetX, offsetY);
 
   platforms.sort((a, b) => b[1] - a[1]).forEach(drawPlatform);
-  somethings.forEach(drawSomething);
-
   bullets.forEach(drawBullet);
 
   drawPlayer(pos);

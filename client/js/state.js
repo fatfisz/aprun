@@ -34,7 +34,6 @@ var {
 var player;
 var trackPoints;
 var platforms;
-var somethings;
 var bullets;
 var enemyChance;
 var offset;
@@ -163,7 +162,6 @@ function adjustPositions() {
 
   adjuster(trackPoints);
   adjuster(platforms);
-  adjuster(somethings);
   adjuster(bullets);
   bullets.forEach((bullet) => {
     if (bullet[2] !== null) {
@@ -331,11 +329,6 @@ Object.defineProperties(exports, {
       return platforms;
     },
   },
-  somethings: {
-    get() {
-      return somethings;
-    },
-  },
   bullets: {
     get() {
       return bullets;
@@ -358,7 +351,6 @@ exports.start = () => {
   platforms = [
     [-offscreen, startingY, offscreen],
   ];
-  somethings = [];
   bullets = [];
   enemyChance = startEnemyChance;
   offset = 0;
