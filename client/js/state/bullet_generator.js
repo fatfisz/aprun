@@ -84,9 +84,10 @@ exports.generate = () => {
   var { player, bullets } = state;
   var playerX = player.pos[0];
   var { length } = bullets;
+  var lastBullet = bullets[length - 1];
   var x = playerX + playerSize / 2 + offscreen + enemyOffset;
 
-  if (length && bullets[length - 1][0] + bulletOffset > x) {
+  if (length && lastBullet[0] + bulletOffset > x) {
     return;
   }
 
@@ -102,11 +103,15 @@ exports.generate = () => {
   var y = possiblePlatforms[Math.floor(Math.random() * length)];
   var enemyX = null;
   var enemyBullets = null;
+  var lastDestinationX = (lastBullet && lastBullet[2]) ? lastBullet[6] : Infinity;
 
   if (Math.random() < enemyChance) {
     var testEnemyX = destinationX + enemyOffset;
 
-    for (var i = 0; playerX - testEnemyX > offscreen; i += 1) {
+    for (var i = 0;
+         playerX - testEnemyX > offscreen &&
+           testEnemyX - playerSize - bulletOffset < lastDestinationX;
+         i += 1) {
       enemyTestArray[i] = isPlatformAt(testEnemyX, y);
 
       if (i > 3 &&
@@ -128,6 +133,6 @@ exports.generate = () => {
     enemyChance = startEnemyChance;
   }
 
-  // x, y, enemyX, enemyBullets, absorbed, missedPlayer
-  bullets.push([x, y + playerSize / 2, enemyX, enemyBullets, false, false]);
+  // x, y, enemyX, enemyBullets, absorbed, missedPlayer, destinationX
+  bullets.push([x, y + playerSize / 2, enemyX, enemyBullets, false, false, destinationX]);
 };
