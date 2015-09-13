@@ -28,6 +28,13 @@ var letters = {
     [1, 0, 0],
     [1, 1, 1],
   ],
+  e: [
+    [1, 1, 1],
+    [1, 0, 0],
+    [1, 1, 0],
+    [1, 0, 0],
+    [1, 1, 1],
+  ],
   h: [
     [1, 0, 1],
     [1, 0, 1],
@@ -42,6 +49,13 @@ var letters = {
     [1, 0, 1],
     [1, 1, 1],
   ],
+  r: [
+    [1, 1, 0],
+    [1, 0, 1],
+    [1, 1, 0],
+    [1, 0, 1],
+    [1, 0, 1],
+  ],
   s: [
     [1, 1, 1],
     [1, 0, 0],
@@ -49,25 +63,39 @@ var letters = {
     [0, 0, 1],
     [1, 1, 1],
   ],
+  t: [
+    [1, 1, 1],
+    [0, 1, 0],
+    [0, 1, 0],
+    [0, 1, 0],
+    [0, 1, 0],
+  ],
+  '?': [
+    [1, 1, 1],
+    [0, 0, 1],
+    [0, 1, 0],
+    [0, 0, 0],
+    [0, 1, 0],
+  ],
 };
 
-function drawLetter(_x, _y, char) {
+function drawLetter(_x, _y, char, scale) {
   var pixels = letters[char];
 
   pixels.forEach((row, y) => {
     row.forEach((pixel, x) => {
       if (pixel) {
-        context.rect(_x + x * 2 + .5, _y + y * 2 + .5, 1, 1);
+        context.rect(_x + x * scale, _y + y * scale, scale, scale);
       }
     });
   });
 }
 
-module.exports = function drawString(_x, _y, s) {
+module.exports = function drawString(_x, _y, s, scale, color) {
   context.beginPath();
   for (var i = 0, ii = s.length; i < ii; i += 1) {
-    drawLetter(_x + i * (width + 1) * 2, _y, s[i]);
+    drawLetter(_x + i * (width + 1) * scale, _y, s[i], scale);
   }
-  context.strokeStyle = '#fff';
-  context.stroke();
+  context.fillStyle = color;
+  context.fill();
 };

@@ -38,7 +38,7 @@ function drawGauge() {
   context.fillStyle = getGaugeColor(value);
   context.fillRect(width - 179, 26, 1 + value * 149, 27);
 
-  drawString(width - 229, 35, 'chaos');
+  drawString(width - 246, 32, 'chaos', 3, '#fff');
 }
 
 function drawOverlay() {
@@ -48,8 +48,12 @@ function drawOverlay() {
     return;
   }
 
-  context.fillStyle = `rgba(255, 255, 255, ${1 - timeLeft / timeToEnd})`;
-  context.fillRect(0, statusHeight, width, height - statusHeight);
+  var alpha = 1 - timeLeft / timeToEnd;
+
+  context.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+  context.fillRect(0, 0, width, height);
+
+  drawString(width / 2 - 62, height / 2 - 10.5, 'restart?', 4, `rgba(0, 0, 0, ${alpha})`);
 }
 
 module.exports = function drawStatus() {
