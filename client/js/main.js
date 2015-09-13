@@ -36,10 +36,12 @@ intro.height = height;
 introContext.fillStyle = '#fff';
 introContext.fillRect(0, 0, width, height);
 introContext.niceText(width / 2, 40, 'anti-paradox run', 8, '#000', 'center');
-introContext.niceText(width / 2, 120, 'time is reversed', 4, '#000', 'center');
-introContext.niceText(width / 2, 150, 'catch your bullets', 4, '#000', 'center');
-introContext.niceText(width / 2, 180, 'avoid bullets of enemies', 4, '#000', 'center');
-introContext.niceText(width / 2, 230, 'do not increase the chaos', 5, '#000', 'center');
+introContext.niceText(width / 2, 120, 'time is reversed', 3, '#000', 'center');
+introContext.niceText(width / 2, 150, 'catch your bullets', 3, '#000', 'center');
+introContext.niceText(width / 2, 180, 'avoid bullets of enemies', 3, '#000', 'center');
+introContext.niceText(width / 2, 210, 'double jump if it gets tough', 3, '#000', 'center');
+introContext.niceText(width / 2, 250, 'creating paradoxes increases the chaos', 5, '#000', 'center');
+introContext.niceText(width / 2, 370, 'moving: use up / down keys or tap upper / lower halves of the screen', 3, '#000', 'center');
 
 var startButton = $('#start-button')[0];
 var startButtonContext = startButton.getContext('2d');
