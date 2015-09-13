@@ -119,7 +119,7 @@ function drawBullet(bullet) {
   }
 }
 
-var shakeSize = 8;
+var shakeSize = 6;
 
 module.exports = function draw() {
   var {
