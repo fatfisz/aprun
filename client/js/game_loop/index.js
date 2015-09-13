@@ -11,6 +11,7 @@
 var draw = require('../draw');
 var drawRestartScreen = require('../draw/restart_screen');
 var state = require('../state');
+var storage = require('../storage');
 var { $ } = require('../utils');
 var moveObjects = require('./move_objects');
 
@@ -33,6 +34,7 @@ function step() {
       stopped = true;
     }, 1500);
 
+    storage.save();
     drawRestartScreen();
     $('html')[0].classList.add('restart');
   }

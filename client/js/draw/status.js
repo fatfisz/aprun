@@ -13,6 +13,7 @@ var {
   statusHeight,
 } = require('../constants');
 var state = require('../state');
+var storage = require('../storage');
 var { context } = require('../utils');
 
 
@@ -46,6 +47,12 @@ function drawScore() {
   context.niceText(width / 2, 32, `score: ${score}`, 3, '#fff', 'center');
 }
 
+function drawBest() {
+  var { best } = storage;
+
+  context.niceText(20, 32, `best: ${best}`, 3, '#fff');
+}
+
 module.exports = function drawStatus() {
   context.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -57,4 +64,5 @@ module.exports = function drawStatus() {
 
   drawGauge();
   drawScore();
+  drawBest();
 };
