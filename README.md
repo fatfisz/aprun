@@ -1,5 +1,7 @@
 # Anti-Paradox Run
 
+![Anti-Paradox Run](https://raw.githubusercontent.com/fatfisz/aprun/master/big.png)
+
 This is my entry for the [js13kGames competition](http://2015.js13kgames.com/).
 
 In this game the time is flowing backwards, you are constantly running, and have to avoid creating paradoxes (that cause CHAOS).
