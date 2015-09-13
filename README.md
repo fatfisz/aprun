@@ -1,8 +1,12 @@
-# APRun
+# Anti-Paradox Run
 
 This is my entry for the [js13kGames competition](http://2015.js13kgames.com/).
 
-Currently under development.
+In this game the time is flowing backwards, you are constantly running, and have to avoid creating paradoxes (that cause CHAOS).
+
+To do that, catch your bullets (which you've shot "before"), avoid enemies' bullets (which you've avoided "before"), and avoid falling into the abyss.
+
+[You can play the game here thanks to the GitHub Pages](http://fatfisz.github.io/aprun/).
 
 ## Requirements
 
