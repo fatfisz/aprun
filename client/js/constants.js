@@ -32,11 +32,11 @@ exports.startEnemyChance = .25;
 exports.enemyBulletOffset = 120;
 exports.enemyBulletShift = 90;
 
-exports.stunTime = 3000;
+exports.stunTime = 2500;
 exports.gaugeRefillSpeed = 5e-5;
-exports.bulletMissGaugeValue = .25;
-exports.bulletHitGaugeValue = .35;
-exports.teleportGaugeValue = .75;
+exports.bulletMissGaugeValue = .3;
+exports.bulletHitGaugeValue = .4;
+exports.teleportGaugeValue = .7;
 exports.timeToEnd = 1500;
 
 // Derivative constants
