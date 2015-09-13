@@ -33,6 +33,7 @@ var platforms;
 var bullets;
 var offset;
 var timeLeft;
+var score;
 
 function clearOffscreenObjects() {
   var playerX = player.pos[0];
@@ -170,6 +171,9 @@ Object.defineProperties(exports, {
   timeLeft: {
     get: () => timeLeft,
   },
+  score: {
+    get: () => score.toFixed(1),
+  },
 });
 
 exports.gauge = gauge;
@@ -186,6 +190,7 @@ exports.start = () => {
   bullets = [];
   offset = 0;
   timeLeft = null;
+  score = 0;
 
   bulletGenerator.init();
   gauge.init();
@@ -226,4 +231,9 @@ exports.updateState = (delta) => {
   platformGenerator.generate();
   bulletGenerator.generate();
   checkTeleport();
+
+  if (timeLeft === null) {
+    score = (offset - player.pos[0]) / 100;
+    console.log(exports.score);
+  }
 };

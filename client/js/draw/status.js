@@ -16,7 +16,7 @@ var {
 } = require('../constants');
 var state = require('../state');
 var { context } = require('../utils');
-var drawString = require('./string');
+var string = require('./string');
 
 
 function getGaugeColor(value) {
@@ -38,11 +38,18 @@ function drawGauge() {
   context.fillStyle = getGaugeColor(value);
   context.fillRect(width - 179, 26, 1 + value * 149, 27);
 
-  drawString(width - 246, 32, 'chaos', 3, '#fff');
+  string.draw(width - 189, 32, 'chaos', 3, '#fff', 'right');
+  string.draw(width - 104, 32, `${Math.round(value * 100)}%`, 3, '#fff', 'center');
+}
+
+function drawScore() {
+  var { score } = state;
+
+  string.draw(width / 2, 32, `score: ${score}`, 3, '#fff', 'center');
 }
 
 function drawOverlay() {
-  var { timeLeft } = state;
+  var { timeLeft, score } = state;
 
   if (timeLeft === null) {
     return;
@@ -53,7 +60,12 @@ function drawOverlay() {
   context.fillStyle = `rgba(255, 255, 255, ${alpha})`;
   context.fillRect(0, 0, width, height);
 
-  drawString(width / 2 - 62, height / 2 - 10.5, 'restart?', 4, `rgba(0, 0, 0, ${alpha})`);
+  if (alpha) {
+    var textColor = `rgba(0, 0, 0, ${alpha})`;
+
+    string.draw(width / 2, height / 2 - 30, `your score: ${score}`, 4, textColor, 'center');
+    string.draw(width / 2, height / 2 + 10, 'try again?', 4, textColor, 'center');
+  }
 }
 
 module.exports = function drawStatus() {
@@ -66,5 +78,6 @@ module.exports = function drawStatus() {
   context.strokeRect(0, statusHeight - 1.5, width, 1);
 
   drawGauge();
+  drawScore();
   drawOverlay();
 };
