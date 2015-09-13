@@ -39,7 +39,7 @@ function drawGauge() {
   context.fillRect(width - 179, 26, 1 + value * 149, 27);
 
   string.draw(width - 189, 32, 'chaos', 3, '#fff', 'right');
-  string.draw(width - 104, 32, `${Math.round(value * 100)}%`, 3, '#fff', 'center');
+  string.draw(width - 104, 32, `${Math.round(value * 100)}%`, 3, 'rgba(255, 255, 255, .9)', 'center');
 }
 
 function drawScore() {

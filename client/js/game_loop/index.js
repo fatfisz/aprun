@@ -22,7 +22,7 @@ function step() {
   }
 
   if (state.didGameEnd()) {
-    exports.stop();
+    stopped = true;
     return;
   }
 
@@ -39,8 +39,4 @@ exports.start = () => {
 
   state.start();
   stopped = false;
-};
-
-exports.stop = () => {
-  stopped = true;
 };

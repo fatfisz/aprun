@@ -234,6 +234,5 @@ exports.updateState = (delta) => {
 
   if (timeLeft === null) {
     score = (offset - player.pos[0]) / 100;
-    console.log(exports.score);
   }
 };
