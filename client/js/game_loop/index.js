@@ -9,21 +9,32 @@
 'use strict';
 
 var draw = require('../draw');
+var drawRestartScreen = require('../draw/restart_screen');
 var state = require('../state');
+var { $ } = require('../utils');
 var moveObjects = require('./move_objects');
 
 
 var stopped = true;
+var stopping = true;
 var delta = 1000 / 60;
+
+window.q = (value) => delta = value;
 
 function step() {
   if (stopped) {
     return;
   }
 
-  if (state.didGameEnd()) {
-    stopped = true;
-    return;
+  if (!stopping && state.ended) {
+    stopping = true;
+
+    setTimeout(() => {
+      stopped = true;
+    }, 1500);
+
+    drawRestartScreen();
+    $('html')[0].classList.add('restart');
   }
 
   requestAnimationFrame(step);
@@ -34,9 +45,20 @@ function step() {
   draw();
 }
 
+Object.defineProperties(exports, {
+  stopped: {
+    get: () => stopped,
+  },
+});
+
 exports.start = () => {
+  if (!stopped) {
+    return;
+  }
+
   requestAnimationFrame(step);
 
   state.start();
   stopped = false;
+  stopping = false;
 };

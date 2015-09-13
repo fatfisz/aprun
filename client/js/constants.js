@@ -37,7 +37,6 @@ exports.gaugeRefillSpeed = 5e-5;
 exports.bulletMissGaugeValue = .3;
 exports.bulletHitGaugeValue = .4;
 exports.teleportGaugeValue = .7;
-exports.timeToEnd = 1500;
 
 // Derivative constants
 exports.offscreen = exports.width / 4 + exports.playerSize;

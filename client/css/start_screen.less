@@ -1,0 +1,53 @@
+/*
+ * Sobanko
+ * https://github.com/fatfisz/sobanko
+ *
+ * Copyright (c) 2015 FatFisz
+ * Licensed under the MIT license.
+ */
+
+@import 'mixins';
+
+
+& {
+  .module-mixins();
+
+  #start-screen {
+    .fullscreen();
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    html.intro-hidden & {
+      opacity: 0;
+      transform: scale(0);
+      transition: opacity 1s, transform 0s ease 1s;
+    }
+  }
+
+  #intro-container {
+    position: relative;
+  }
+
+  #intro {
+    border: 2px solid #333;
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
+  #start-button {
+    cursor: pointer;
+    left: 50%;
+    max-width: 116px;
+    position: absolute;
+    top: 75%;
+    transform: translateX(-50%);
+    width: (116 / 964 * 100%);
+
+    html.intro-hidden & {
+      cursor: default;
+    }
+  }
+}

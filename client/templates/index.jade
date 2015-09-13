@@ -8,10 +8,16 @@ html
     link(rel='stylesheet', href='bundle.css')
   body
     #game-container
-      #canvas-container
-        canvas
+      #canvas-container.resize
+        canvas#game
+        canvas#restart-screen
+        canvas#restart-button
       #mobile-controls
         #up
         #down
+    #start-screen
+      #intro-container.resize
+        canvas#intro
+        canvas#start-button
 
     script(src='bundle.js')

@@ -71,7 +71,7 @@ function measure(s, scale) {
 
 exports.$ = document.querySelectorAll.bind(document);
 exports.root = exports.$('html')[0];
-exports.context = exports.$('canvas')[0].getContext('2d');
+exports.context = exports.$('#game')[0].getContext('2d');
 
 assign(Object.getPrototypeOf(exports.context), {
 

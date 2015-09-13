@@ -11,24 +11,23 @@
 var assign = require('object-assign');
 
 var { width, height } = require('./constants');
-var { canvas } = require('./utils').context;
+var { $ } = require('./utils');
 
 
-// Add 4 for the borders
 width += 4;
 height += 4;
-
-var container = canvas.parentElement;
 var aspectRatio = width / height;
 
 module.exports = function resizeCanvas() {
-  var { clientWidth, clientHeight } = container;
+  [].forEach.call($('.resize'), (element) => {
+    var { clientWidth, clientHeight } = element.parentElement;
 
-  clientWidth = Math.min(clientWidth, width);
-  clientHeight = Math.min(clientHeight, height);
+    clientWidth = Math.min(clientWidth, width);
+    clientHeight = Math.min(clientHeight, height);
 
-  assign(canvas.style, {
-    width: Math.min(clientWidth, clientHeight * aspectRatio) + 'px',
-    height: Math.min(clientWidth / aspectRatio, clientHeight) + 'px',
+    assign(element.style, {
+      width: Math.min(clientWidth, clientHeight * aspectRatio) + 'px',
+      height: Math.min(clientWidth / aspectRatio, clientHeight) + 'px',
+    });
   });
 };
