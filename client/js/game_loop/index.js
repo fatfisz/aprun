@@ -18,9 +18,7 @@ var moveObjects = require('./move_objects');
 
 var stopped = true;
 var stopping = true;
-var delta = 1000 / 60;
-
-window.q = (value) => delta = value;
+var delta = 1000 / 50;
 
 function step() {
   if (stopped) {
